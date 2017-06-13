@@ -39,16 +39,26 @@ func infobot(ctx context.Context, hookChan <-chan *quadlek.HookMsg) {
 				continue
 			}
 
-			factStore.HumanProcess(line)
-			out, err := factStore.Serialize()
-			if err != nil {
-				log.WithField("err", err).Error("Error serializing factstore.")
+			if factStore.HumanFactSet(line) {
+				out, err := factStore.Serialize()
+				if err != nil {
+					log.WithField("err", err).Error("Error serializing factstore.")
+					continue
+				}
+
+				err = hookMsg.Store.Update(FactStoreKey, out)
+
+				if err == nil {
+					log.WithField("err", err).Error("Error while saving factstore.")
+					continue
+				}
+
+				hookMsg.Bot.Respond(hookMsg.Msg, "Alright. "+line)
 				continue
 			}
 
-			err = hookMsg.Store.Update(FactStoreKey, out)
-			if err != nil {
-				log.WithField("err", err).Error("Error while saving factstore.")
+			if factStore.HumanFactForget(line) {
+				hookMsg.Bot.Respond(hookMsg.Msg, "Alright. I forgot "+line)
 				continue
 			}
 
