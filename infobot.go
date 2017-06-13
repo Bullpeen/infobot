@@ -34,6 +34,11 @@ func infobot(ctx context.Context, hookChan <-chan *quadlek.HookMsg) {
 
 			line := strings.TrimPrefix(hookMsg.Msg.Text, fmt.Sprintf("<@%s> ", hookMsg.Bot.GetUserId()))
 
+			if lookup := factStore.LookupFact(line); lookup != "" {
+				hookMsg.Bot.Respond(hookMsg.Msg, lookup)
+				continue
+			}
+
 			factStore.HumanProcess(line)
 			out, err := factStore.Serialize()
 			if err != nil {
