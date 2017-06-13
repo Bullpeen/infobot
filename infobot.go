@@ -58,6 +58,12 @@ func infobot(ctx context.Context, hookChan <-chan *quadlek.HookMsg) {
 			}
 
 			if factStore.HumanFactForget(line) {
+				out, err := factStore.Serialize()
+				if err != nil {
+					log.WithField("err", err).Error("Error serializing factstore.")
+					continue
+				}
+
 				err = hookMsg.Store.Update(FactStoreKey, out)
 
 				if err != nil {
