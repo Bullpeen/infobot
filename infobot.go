@@ -58,7 +58,7 @@ func infobot(ctx context.Context, hookChan <-chan *quadlek.HookMsg) {
 			}
 
 			if factStore.HumanFactForget(line) {
-				hookMsg.Bot.Respond(hookMsg.Msg, "Alright. I forgot "+line)
+				hookMsg.Bot.Respond(hookMsg.Msg, "Alright. I forgot it.")
 				continue
 			}
 
