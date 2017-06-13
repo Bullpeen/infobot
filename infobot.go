@@ -48,7 +48,7 @@ func infobot(ctx context.Context, hookChan <-chan *quadlek.HookMsg) {
 
 				err = hookMsg.Store.Update(FactStoreKey, out)
 
-				if err == nil {
+				if err != nil {
 					log.WithField("err", err).Error("Error while saving factstore.")
 					continue
 				}
