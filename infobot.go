@@ -58,6 +58,13 @@ func infobot(ctx context.Context, hookChan <-chan *quadlek.HookMsg) {
 			}
 
 			if factStore.HumanFactForget(line) {
+				err = hookMsg.Store.Update(FactStoreKey, out)
+
+				if err != nil {
+					log.WithField("err", err).Error("Error while saving factstore.")
+					continue
+				}
+
 				hookMsg.Bot.Respond(hookMsg.Msg, "Alright. I forgot it.")
 				continue
 			}
